@@ -53,4 +53,6 @@
 /.vs/*
 /build/*
 
+/.tasks
+/site-packages/*
 
