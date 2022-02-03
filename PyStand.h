@@ -29,6 +29,9 @@ public:
 public:
 	std::wstring Ansi2Unicode(const char *text);
 
+	int RunString(const wchar_t *script);
+	int RunString(const char *script);
+
 protected:
 	bool CheckEnviron(const wchar_t *rtp);
 	bool LoadPython();

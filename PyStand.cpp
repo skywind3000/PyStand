@@ -144,6 +144,11 @@ bool PyStand::CheckEnviron(const wchar_t *rtp)
 		return false;
 	}
 
+	// setup environment
+	SetEnvironmentVariableW(L"PYSTAND", _pystand.c_str());
+	SetEnvironmentVariableW(L"PYSTAND_HOME", _home.c_str());
+	SetEnvironmentVariableW(L"PYSTAND_RUNTIME", _runtime.c_str());
+
 #if 0
 	wprintf(L"%s - %s\n", _pystand.c_str(), path);
 	MessageBoxW(NULL, _pystand.c_str(), _home.c_str(), MB_OK);
@@ -184,6 +189,47 @@ bool PyStand::LoadPython()
 
 
 //---------------------------------------------------------------------
+// run string
+//---------------------------------------------------------------------
+int PyStand::RunString(const wchar_t *script)
+{
+	if (_Py_Main == NULL) {
+		return -1;
+	}
+	int hr = 0;
+	int i;
+	std::vector<std::wstring> argv;
+	// init arguments
+	argv.push_back(_argv[0]);
+	argv.push_back(L"-I");
+	argv.push_back(L"-s");
+	argv.push_back(L"-S");
+	argv.push_back(L"-c");
+	argv.push_back(script);
+	for (i = 1; i < (int)_argv.size(); i++) {
+		argv.push_back(_argv[i]);
+	}
+	// finalize arguments
+	std::vector<wchar_t*> real_argv;
+	for (i = 0; i < (int)argv.size(); i++) {
+		real_argv.push_back((wchar_t*)argv[i].c_str());
+	}
+	hr = _Py_Main((int)argv.size(), &real_argv[0]);
+	return hr;
+}
+
+
+//---------------------------------------------------------------------
+// run ansi string
+//---------------------------------------------------------------------
+int PyStand::RunString(const char *script)
+{
+	std::wstring text = Ansi2Unicode(script);
+	return RunString(text.c_str());
+}
+
+
+//---------------------------------------------------------------------
 // entry
 //---------------------------------------------------------------------
 
@@ -194,7 +240,8 @@ bool PyStand::LoadPython()
 int APIENTRY 
 WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
 {
-	PyStand ps(L"runtime");
+	PyStand ps("runtime");
+	ps.RunString("import sys;print(sys.argv)");
 	// wprintf(L"%s\n", ps.Ansi2Unicode("Hello, World").c_str());
 	// MessageBoxA(NULL, "Hello, World !!", "DD", MB_OK);
 	return 0;
