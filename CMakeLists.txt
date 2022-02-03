@@ -1,12 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 
-if (CMAKE_GENERATOR MATCHES "Visual Studio")
-	set(CMAKE_GENERATOR_PLATFORM Win32)
-endif()
-
 project (PyStand)
 
 
+# sources
 add_executable(PyStand
 	WIN32
 	PyStand.cpp
@@ -32,5 +29,6 @@ else()
 		winmm
 		)
 endif()
+
 
 

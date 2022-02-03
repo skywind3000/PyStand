@@ -103,7 +103,8 @@ void PyStand::CheckEnviron()
 //! src: 
 //! mode: win
 //! int: objs
-int WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
+int APIENTRY 
+WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
 {
 	PyStand ps;
 	// MessageBoxA(NULL, "Hello, World !!", "DD", MB_OK);
