@@ -34,11 +34,21 @@
 *.pch
 *.sdf
 
+/runtime/*
+/source/runtime/*
+
 /source/objs/*
 /source/Debug/*
 /source/Release/*
 /source/x64/*
 /source/.vs/*
-/source/runtime/*
+/source/build/*
+
+/objs/*
+/Debug/*
+/Release/*
+/x64/*
+/.vs/*
+/build/*
 
 
