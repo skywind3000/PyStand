@@ -9,6 +9,9 @@
 #include "PyStand.h"
 #include <shlwapi.h>
 
+#ifdef _MSC_VER
+#pragma comment(lib, "shlwapi.lib")
+#endif
 
 
 //---------------------------------------------------------------------
@@ -58,7 +61,7 @@ void PyStand::CheckEnviron()
 	_pystand = path;
 
 	// init: _home
-	int size = wcslen(path);
+	int size = (int)wcslen(path);
 	for (; size > 0; size--) {
 		if (path[size - 1] == L'/') break;
 		if (path[size - 1] == L'\\') break;

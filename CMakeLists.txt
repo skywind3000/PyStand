@@ -9,9 +9,8 @@ add_executable(PyStand
 	resource.rc
 	)
 
-target_link_libraries(PyStand -static)
 
-# static link with vc
+# static link
 if (CMAKE_GENERATOR MATCHES "Visual Studio")
 	set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 	if (CMAKE_BUILD_TYPE MATCHES "Debug")
@@ -20,6 +19,13 @@ if (CMAKE_GENERATOR MATCHES "Visual Studio")
 		target_compile_options(PyStand PUBLIC /MT)
 	endif()
 	target_link_options(PyStand PUBLIC /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
+else()
+	# for mingw
+	target_link_libraries(PyStand 
+		-static
+		shlwapi
+		winmm
+		)
 endif()
 
 
