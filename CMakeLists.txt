@@ -23,6 +23,8 @@ if (CMAKE_GENERATOR MATCHES "Visual Studio")
 	target_link_options(PyStand PUBLIC /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
 else()
 	# for mingw
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS_RELEASE} -s")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELEASE} -s")
 	target_link_libraries(PyStand 
 		-static
 		shlwapi
