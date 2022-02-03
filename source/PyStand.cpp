@@ -16,7 +16,7 @@
 //! src: 
 //! mode: win
 //! int: objs
-int main(void)
+int WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
 {
 	MessageBoxA(NULL, "Hello, World !!", "DD", MB_OK);
 	return 0;
