@@ -38,4 +38,7 @@
 /source/Debug/*
 /source/Release/*
 /source/x64/*
+/source/.vs/*
+/source/runtime/*
+
 
