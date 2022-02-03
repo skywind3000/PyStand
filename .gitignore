@@ -34,6 +34,8 @@
 *.pch
 *.sdf
 
+/.root
+
 /runtime/*
 /source/runtime/*
 
