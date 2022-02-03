@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 
+if (CMAKE_GENERATOR MATCHES "Visual Studio")
+	set(CMAKE_GENERATOR_PLATFORM Win32)
+endif()
+
 project (PyStand)
 
 
@@ -13,11 +17,12 @@ add_executable(PyStand
 # static link
 if (CMAKE_GENERATOR MATCHES "Visual Studio")
 	set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
-	if (CMAKE_BUILD_TYPE MATCHES "Debug")
-		target_compile_options(PyStand PUBLIC /MTd)
-	else()
-		target_compile_options(PyStand PUBLIC /MT)
-	endif()
+	target_compile_options(PyStand
+		PUBLIC
+		$<$<CONFIG:Debug>:/MTd>
+		$<$<CONFIG:Release>:/MT>
+		$<$<CONFIG:MinSizeRel>:/MT>
+		)
 	target_link_options(PyStand PUBLIC /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
 else()
 	# for mingw
