@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+*.pch
+*.sdf
+
+/source/objs/*
+/source/Debug/*
+/source/Release/*
+/source/x64/*
+
