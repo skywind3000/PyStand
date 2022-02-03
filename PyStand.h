@@ -11,6 +11,31 @@
 
 #include <stdio.h>
 #include <windows.h>
+#include <shlwapi.h>
+#include <string>
+#include <vector>
+
+
+//---------------------------------------------------------------------
+// PyStand
+//---------------------------------------------------------------------
+class PyStand
+{
+public:
+	virtual ~PyStand();
+	PyStand();
+
+protected:
+	void CheckEnviron();
+
+protected:
+	HINSTANCE _hDLL;
+	std::wstring _cwd;		// current working directory
+	std::wstring _args;		// arguments
+	std::wstring _pystand;	// absolute path of pystand
+	std::wstring _home;		// home directory of PyStand.exe
+	std::vector<std::wstring> _argv;
+};
 
 
 #endif
