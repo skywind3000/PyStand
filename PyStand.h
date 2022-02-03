@@ -26,7 +26,12 @@ public:
 	PyStand();
 
 protected:
-	void CheckEnviron();
+	bool CheckEnviron();
+	bool LoadPython();
+
+protected:
+	typedef int (*t_Py_Main)(int argc, wchar_t **argv);
+	t_Py_Main _Py_Main;
 
 protected:
 	HINSTANCE _hDLL;
