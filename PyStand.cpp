@@ -72,7 +72,7 @@ std::wstring PyStand::Ansi2Unicode(const char *text)
 
 
 //---------------------------------------------------------------------
-// init: _args, _argv, _cwd, _pystand, _home, _runtime
+// init: _args, _argv, _cwd, _pystand, _home, _runtime, 
 //---------------------------------------------------------------------
 bool PyStand::CheckEnviron(const wchar_t *rtp)
 {
@@ -148,6 +148,7 @@ bool PyStand::CheckEnviron(const wchar_t *rtp)
 	SetEnvironmentVariableW(L"PYSTAND", _pystand.c_str());
 	SetEnvironmentVariableW(L"PYSTAND_HOME", _home.c_str());
 	SetEnvironmentVariableW(L"PYSTAND_RUNTIME", _runtime.c_str());
+	SetEnvironmentVariableW(L"PYSTAND_SCRIPT", _script.c_str());
 
 #if 0
 	wprintf(L"%s - %s\n", _pystand.c_str(), path);
@@ -230,7 +231,70 @@ int PyStand::RunString(const char *script)
 
 
 //---------------------------------------------------------------------
-// entry
+// LoadScript()
+//---------------------------------------------------------------------
+int PyStand::DetectScript()
+{
+	// init: _script (init script like PyStand.int or PyStand.py)
+	int size = (int)_pystand.size();
+	for (; size > 0; size--) {
+		if (_pystand[size] == L'.') break;
+	}
+	std::wstring main = _pystand.substr(0, size);
+	std::vector<const wchar_t*> exts;
+	std::vector<std::wstring> scripts;
+	exts.push_back(L".int");
+	exts.push_back(L".py");
+	exts.push_back(L".pyw");
+	_script = L"";
+	for (int i = 0; i < (int)exts.size(); i++) {
+		std::wstring test = main + exts[i];
+		scripts.push_back(test);
+		if (PathFileExistsW(test.c_str())) {
+			_script = test;
+			break;
+		}
+	}
+	if (_script.size() == 0) {
+		std::wstring msg = L"Can't find either of:\r\n";
+		for (int j = 0; j < (int)scripts.size(); j++) {
+			msg += scripts[j] + L"\r\n";
+		}
+		MessageBoxW(NULL, msg.c_str(), L"ERROR", MB_OK);
+		return -1;
+	}
+	SetEnvironmentVariableW(L"PYSTAND_SCRIPT", _script.c_str());
+	return 0;
+}
+
+
+//---------------------------------------------------------------------
+// init script
+//---------------------------------------------------------------------
+const char *init_script = 
+"import sys\n"
+"import os\n"
+"import copy\n"
+"PYSTAND = os.environ['PYSTAND']\n"
+"PYSTAND_HOME = os.environ['PYSTAND_HOME']\n"
+"PYSTAND_RUNTIME = os.environ['PYSTAND_RUNTIME']\n"
+"PYSTAND_SCRIPT = os.environ['PYSTAND_SCRIPT']\n"
+"for n in ['lib', 'site-packages']:\n"
+"    test = os.path.join(PYSTAND_HOME, n)\n"
+"    if os.path.exists(test): sys.path.append(test)\n"
+"sys.argv = [PYSTAND_SCRIPT] + sys.argv[1:]\n"
+"text = open(PYSTAND_SCRIPT).read()\n"
+"environ = {'__file__': PYSTAND_SCRIPT}\n"
+"saveloc = copy.copy(locals())\n"
+"for k in saveloc:\n"
+"    if k.startswith('__'):\n"
+"        environ[k] = saveloc[k]\n"
+"exec(text, globals(), environ)\n"
+"";
+
+
+//---------------------------------------------------------------------
+// main
 //---------------------------------------------------------------------
 
 //! flag: -static
@@ -241,10 +305,11 @@ int APIENTRY
 WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
 {
 	PyStand ps("runtime");
-	ps.RunString("import sys;print(sys.argv)");
-	// wprintf(L"%s\n", ps.Ansi2Unicode("Hello, World").c_str());
-	// MessageBoxA(NULL, "Hello, World !!", "DD", MB_OK);
-	return 0;
+	if (ps.DetectScript() != 0) {
+		return 3;
+	}
+	int hr = ps.RunString(init_script);
+	return hr;
 }
 
 

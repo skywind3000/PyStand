@@ -32,6 +32,8 @@ public:
 	int RunString(const wchar_t *script);
 	int RunString(const char *script);
 
+	int DetectScript();
+
 protected:
 	bool CheckEnviron(const wchar_t *rtp);
 	bool LoadPython();
@@ -48,6 +50,7 @@ protected:
 	std::wstring _pystand;	// absolute path of pystand
 	std::wstring _runtime;	// absolute path of embedded python runtime
 	std::wstring _home;		// home directory of PyStand.exe
+	std::wstring _script;	// init script like PyStand.int or PyStand.py
 	std::vector<std::wstring> _argv;
 };
 
