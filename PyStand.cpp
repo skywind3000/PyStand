@@ -26,11 +26,11 @@ PyStand::~PyStand()
 //---------------------------------------------------------------------
 // ctor
 //---------------------------------------------------------------------
-PyStand::PyStand()
+PyStand::PyStand(const wchar_t *runtime)
 {
 	_hDLL = NULL;
 	_Py_Main = NULL;
-	if (CheckEnviron() == false) {
+	if (CheckEnviron(runtime) == false) {
 		exit(1);
 	}
 	if (LoadPython() == false) {
@@ -40,9 +40,41 @@ PyStand::PyStand()
 
 
 //---------------------------------------------------------------------
-// init: _args, _argv, _cwd, _pystand, _home
+// ctor for ansi
 //---------------------------------------------------------------------
-bool PyStand::CheckEnviron()
+PyStand::PyStand(const char *runtime)
+{
+	_hDLL = NULL;
+	_Py_Main = NULL;
+	std::wstring rtp = Ansi2Unicode(runtime);
+	if (CheckEnviron(rtp.c_str()) == false) {
+		exit(1);
+	}
+	if (LoadPython() == false) {
+		exit(2);
+	}
+}
+
+
+//---------------------------------------------------------------------
+// char to wchar_t
+//---------------------------------------------------------------------
+std::wstring PyStand::Ansi2Unicode(const char *text)
+{
+	int require = (int)strlen(text) * 2 + 10;
+	std::wstring wide;
+	wide.resize(require + 2);
+	MultiByteToWideChar(CP_ACP, 0, text, -1, &wide[0], require);
+	int size = wcslen(wide.c_str());
+	wide.resize(size);
+	return wide;
+}
+
+
+//---------------------------------------------------------------------
+// init: _args, _argv, _cwd, _pystand, _home, _runtime
+//---------------------------------------------------------------------
+bool PyStand::CheckEnviron(const wchar_t *rtp)
 {
 	// init: _args, _argv
 	LPWSTR *argvw;
@@ -79,8 +111,25 @@ bool PyStand::CheckEnviron()
 	_home = path;
 	SetCurrentDirectoryW(_cwd.c_str());
 
+	// init: _runtime (embedded python directory)
+	bool abspath = false;
+	if (wcslen(rtp) >= 3) {
+		if (rtp[1] == L':') {
+			if (rtp[2] == L'/' || rtp[2] == L'\\')
+				abspath = true;
+		}
+	}
+	if (abspath == false) {
+		_runtime = _home + L"\\" + rtp;
+	}
+	else {
+		_runtime = rtp;
+	}
+	GetFullPathNameW(_runtime.c_str(), MAX_PATH + 1, path, NULL);
+	_runtime = path;
+
 	// check home
-	std::wstring check = _home + L"\\runtime";
+	std::wstring check = _runtime;
 	if (!PathFileExistsW(check.c_str())) {
 		std::wstring msg = L"Missing embedded Python3 in:\n" + check;
 		MessageBoxW(NULL, msg.c_str(), L"ERROR", MB_OK);
@@ -88,7 +137,7 @@ bool PyStand::CheckEnviron()
 	}
 
 	// check python3.dll
-	std::wstring check2 = _home + L"\\runtime\\python3.dll";
+	std::wstring check2 = _runtime + L"\\python3.dll";
 	if (!PathFileExistsW(check2.c_str())) {
 		std::wstring msg = L"Missing python3.dll in:\r\n" + check;
 		MessageBoxW(NULL, msg.c_str(), L"ERROR", MB_OK);
@@ -109,7 +158,7 @@ bool PyStand::CheckEnviron()
 //---------------------------------------------------------------------
 bool PyStand::LoadPython()
 {
-	std::wstring runtime = _home + L"\\runtime";
+	std::wstring runtime = _runtime;
 	// python dll must be load under "runtime"
 	SetCurrentDirectoryW(runtime.c_str());
 	// LoadLibrary
@@ -145,8 +194,8 @@ bool PyStand::LoadPython()
 int APIENTRY 
 WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
 {
-	PyStand ps;
-
+	PyStand ps(L"runtime");
+	// wprintf(L"%s\n", ps.Ansi2Unicode("Hello, World").c_str());
 	// MessageBoxA(NULL, "Hello, World !!", "DD", MB_OK);
 	return 0;
 }

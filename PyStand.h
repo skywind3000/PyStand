@@ -23,11 +23,16 @@ class PyStand
 {
 public:
 	virtual ~PyStand();
-	PyStand();
+	PyStand(const wchar_t *runtime);
+	PyStand(const char *runtime);
+
+public:
+	std::wstring Ansi2Unicode(const char *text);
 
 protected:
-	bool CheckEnviron();
+	bool CheckEnviron(const wchar_t *rtp);
 	bool LoadPython();
+
 
 protected:
 	typedef int (*t_Py_Main)(int argc, wchar_t **argv);
@@ -38,6 +43,7 @@ protected:
 	std::wstring _cwd;		// current working directory
 	std::wstring _args;		// arguments
 	std::wstring _pystand;	// absolute path of pystand
+	std::wstring _runtime;	// absolute path of embedded python runtime
 	std::wstring _home;		// home directory of PyStand.exe
 	std::vector<std::wstring> _argv;
 };
