@@ -45,6 +45,14 @@ PyStand 添加了一个 `os.MessageBox(msg, title)` 的接口，可以用来简�
 可以替换 appicon.ico 文件并重新编译 PyStand.exe ，或者使用 Resource Hacker 直接
 替换 Release 内下载的 PyStand.exe 文件的程序图标。
 
+### 大量脚本
+
+可以在 PyStand.exe 同级目录新建一个 script 文件夹，将脚本放进去，PyStand.int 里面
+就是添加一下 sys.path 然后 import 即可。
+
+发布打包时将 script 文件夹用 zip 压缩成 script.egg 文件，PyStand.int 里检测到该
+文件存在就加入到 sys.path，然后再 import。
+
 ## 使用例子
 
 见 Release 下面的内容。

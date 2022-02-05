@@ -55,4 +55,5 @@
 
 /.tasks
 /site-packages/*
+/publish/*
 
