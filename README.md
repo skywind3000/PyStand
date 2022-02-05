@@ -30,6 +30,10 @@ Python 独立部署环境。
 
 如果在 cmd.exe 内部运行 PyStand.exe 可以看到标准输出和标准错误。
 
+### MessageBox
+
+PyStand 添加了一个 `os.MessageBox(msg, title)` 的接口，可以用来简单显示个对话框。
+
 ## 使用例子
 
 见 Release 下面的内容。
