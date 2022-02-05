@@ -1,6 +1,7 @@
 # PyStand
 
-Python 独立部署环境。
+Python 独立部署环境。Python 3.5 以后，Windows 下面都有一个 Embedded Python 的
+独立 Python 运行环境，这个 PyStand 就是配合 Embedded Python 使用的。
 
 ## 特性说明
 
@@ -13,7 +14,7 @@ Python 独立部署环境。
 
 ## 使用说明
 
-- 用 CMake 生成 PyStand.exe
+- 用 CMake 生成 PyStand.exe （或者到 Release 里下个现成的）。
 - 下载 Python Embedded 版本，放到 PyStand.exe 所在目录的 runtime 子目录内。
 - 注意 Python Embedded 如果是 32 位，PyStand 配置 CMake 时也需要指明 `-A Win32`。
 - 在 PyStand.exe 所在目录创建 Python 源代码 PyStand.int。
@@ -33,6 +34,11 @@ Python 独立部署环境。
 ### MessageBox
 
 PyStand 添加了一个 `os.MessageBox(msg, title)` 的接口，可以用来简单显示个对话框。
+
+### 更换图标
+
+可以替换 appicon.ico 文件并重新编译 PyStand.exe ，或者使用 Resource Hacker 直接
+替换 Release 内下载的 PyStand.exe 文件的程序图标。
 
 ## 使用例子
 
