@@ -18,12 +18,17 @@ Python 独立部署环境。
 - 注意 Python Embedded 如果是 32 位，PyStand 配置 CMake 时也需要指明 `-A Win32`。
 - 在 PyStand.exe 所在目录创建 Python 源代码 PyStand.int。
 - 双击 PyStand.exe 就会运行 PyStand.int 里的代码。
-- 如果在 cmd.exe 内部运行 PyStand.exe 可以看到标准输出和标准错误。
 
-## 安装模块
+## 配置程序
+
+### 安装依赖
 
 用一个同 Embedded Python 相同版本的 Python 做一个 venv，然后 pip 独立安装好模块后
 将 site-packages 内对应的包复制到 PyStand.exe 的 site-packages 下直接使用。
+
+### 查看错误
+
+如果在 cmd.exe 内部运行 PyStand.exe 可以看到标准输出和标准错误。
 
 ## 使用例子
 
