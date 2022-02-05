@@ -281,6 +281,7 @@ const char *init_script =
 "PYSTAND_HOME = os.environ['PYSTAND_HOME']\n"
 "PYSTAND_RUNTIME = os.environ['PYSTAND_RUNTIME']\n"
 "PYSTAND_SCRIPT = os.environ['PYSTAND_SCRIPT']\n"
+"sys.path.insert(0, os.path.abspath(PYSTAND_HOME))\n"
 "def MessageBox(msg, info = 'Message'):\n"
 "    import ctypes\n"
 "    ctypes.windll.user32.MessageBoxW(None, str(msg), str(info), 0)\n"
