@@ -3,7 +3,12 @@
 Python 独立部署环境。Python 3.5 以后，Windows 下面都有一个 Embedded Python 的
 独立 Python 运行环境，这个 PyStand 就是配合 Embedded Python 使用的。
 
-## 特性说明
+## 特性介绍
+
+- 使用 PyStand + PyQt5 精简版发布 PyQt 程序，打包大小只有 14MB。
+- 使用 PyStand 发布普通 Python 程序，打包大小仅 5MB。
+
+## 功能说明
 
 - Windows 下独立 Python 环境的启动器。
 - 自动加载 PyStand.exe 同级目录下面 runtime 子目录内的 Embedded Python。
@@ -12,7 +17,7 @@ Python 独立部署环境。Python 3.5 以后，Windows 下面都有一个 Embed
 - 窗口程序，无 Console，但是如果在 cmd.exe 内运行，可以看到 print 的内容。
 - 会自动添加 PyStand.exe 同级目录下的 `site-packages` 目录，库可以放到里面。
 
-## 使用说明
+## 使用方式
 
 - 用 CMake 生成 PyStand.exe （或者到 Release 里下个现成的）。
 - 下载 Python Embedded 版本，放到 PyStand.exe 所在目录的 runtime 子目录内。
