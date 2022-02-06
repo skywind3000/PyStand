@@ -25,7 +25,7 @@ Python 独立部署环境。Python 3.5 以后，Windows 下面都有一个 Embed
 - 在 PyStand.exe 所在目录创建 Python 源代码 PyStand.int。
 - 双击 PyStand.exe 就会运行 PyStand.int 里的代码。
 
-## 配置程序
+## 常见问题
 
 ### 安装依赖
 
@@ -45,7 +45,7 @@ PyStand 添加了一个 `os.MessageBox(msg, title)` 的接口，可以用来简�
 可以替换 appicon.ico 文件并重新编译 PyStand.exe ，或者使用 Resource Hacker 直接
 替换 Release 内下载的 PyStand.exe 文件的程序图标。
 
-### 大量脚本
+### 脚本组织
 
 可以在 PyStand.exe 同级目录新建一个 script 文件夹，将脚本放进去，PyStand.int 里面
 就是添加一下 sys.path 然后 import 即可。
@@ -55,6 +55,10 @@ PyStand 添加了一个 `os.MessageBox(msg, title)` 的接口，可以用来简�
 
 ## 使用例子
 
-见 Release 下面的内容。
+这个回答里我说了详细的用法以及 PyInstaller 的优缺点：
+
+- [知乎：打包 PyQt 应用的最佳方案是什么？](https://www.zhihu.com/question/48776632/answer/2336654649).
+
+更多的用法可以见 Release 下面的例子。
 
 
