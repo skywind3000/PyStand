@@ -6,6 +6,10 @@
 // Last Modified: 2022/02/03 23:39:54
 //
 //=====================================================================
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS 1
+#endif
+
 #include "PyStand.h"
 #include <shlwapi.h>
 #include <string>
@@ -325,21 +329,14 @@ WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
 		return 3;
 	}
 	if (AttachConsole(ATTACH_PARENT_PROCESS)) {
-#ifdef _MSC_VER
-		freopen_s("CONOUT$", "w", stdout);
-		freopen_s("CONOUT$", "w", stderr);
-		freopen_s("CONIN$", "r", stdin);
-#else
 		freopen("CONOUT$", "w", stdout);
 		freopen("CONOUT$", "w", stderr);
-		freopen("CONIN$", "r", stdin);
-#endif
-		int fd = fileno(stdout);
+		int fd = _fileno(stdout);
 		if (fd >= 0) {
 			std::string fn = std::to_string(fd);
 			SetEnvironmentVariableA("PYSTAND_STDOUT", fn.c_str());
 		}
-		fd = fileno(stdin);
+		fd = _fileno(stdin);
 		if (fd >= 0) {
 			std::string fn = std::to_string(fd);
 			SetEnvironmentVariableA("PYSTAND_STDIN", fn.c_str());
