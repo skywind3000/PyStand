@@ -325,10 +325,15 @@ WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
 		return 3;
 	}
 	if (AttachConsole(ATTACH_PARENT_PROCESS)) {
-#if 0
+#ifdef _MSC_VER
+		freopen_s("CONOUT$", "w", stdout);
+		freopen_s("CONOUT$", "w", stderr);
+		freopen_s("CONIN$", "r", stdin);
+#else
 		freopen("CONOUT$", "w", stdout);
 		freopen("CONOUT$", "w", stderr);
 		freopen("CONIN$", "r", stdin);
+#endif
 		int fd = fileno(stdout);
 		if (fd >= 0) {
 			std::string fn = std::to_string(fd);
@@ -339,7 +344,6 @@ WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
 			std::string fn = std::to_string(fd);
 			SetEnvironmentVariableA("PYSTAND_STDIN", fn.c_str());
 		}
-#endif
 	}
 	int hr = ps.RunString(init_script);
 	// printf("finalize\n");
