@@ -99,6 +99,9 @@ bool PyStand::CheckEnviron(const wchar_t *rtp)
 
 	// init: _pystand (full path of PyStand.exe)
 	GetModuleFileNameW(NULL, path, MAX_PATH + 1);
+#if 0
+	wsprintf(path, L"e:\\github\\tools\\pystand\\pystand.exe");
+#endif
 	_pystand = path;
 
 	// init: _home
@@ -201,23 +204,23 @@ int PyStand::RunString(const wchar_t *script)
 	}
 	int hr = 0;
 	int i;
-	std::vector<std::wstring> argv;
+	_py_argv.resize(0);
 	// init arguments
-	argv.push_back(_argv[0]);
-	argv.push_back(L"-I");
-	argv.push_back(L"-s");
-	argv.push_back(L"-S");
-	argv.push_back(L"-c");
-	argv.push_back(script);
+	_py_argv.push_back(_argv[0]);
+	_py_argv.push_back(L"-I");
+	_py_argv.push_back(L"-s");
+	_py_argv.push_back(L"-S");
+	_py_argv.push_back(L"-c");
+	_py_argv.push_back(script);
 	for (i = 1; i < (int)_argv.size(); i++) {
-		argv.push_back(_argv[i]);
+		_py_argv.push_back(_argv[i]);
 	}
 	// finalize arguments
-	std::vector<wchar_t*> real_argv;
-	for (i = 0; i < (int)argv.size(); i++) {
-		real_argv.push_back((wchar_t*)argv[i].c_str());
+	_py_args.resize(0);
+	for (i = 0; i < (int)_py_argv.size(); i++) {
+		_py_args.push_back((wchar_t*)_py_argv[i].c_str());
 	}
-	hr = _Py_Main((int)argv.size(), &real_argv[0]);
+	hr = _Py_Main((int)_py_args.size(), &_py_args[0]);
 	return hr;
 }
 
@@ -300,12 +303,9 @@ const char *init_script =
 "sys.path.append(os.path.abspath(PYSTAND_HOME))\n"
 "sys.argv = [PYSTAND_SCRIPT] + sys.argv[1:]\n"
 "text = open(PYSTAND_SCRIPT).read()\n"
-"environ = {'__file__': PYSTAND_SCRIPT}\n"
-"saveloc = copy.copy(locals())\n"
-"for k in saveloc:\n"
-"    if k.startswith('__'):\n"
-"        environ[k] = saveloc[k]\n"
-"exec(text, globals(), environ)\n"
+"environ = {'__file__': PYSTAND_SCRIPT, '__name__': '__main__'}\n"
+"environ['__package__'] = None\n"
+"exec(text, environ)\n"
 "";
 
 
@@ -317,7 +317,7 @@ const char *init_script =
 //! src: 
 //! mode: win
 //! int: objs
-int APIENTRY 
+int WINAPI 
 WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
 {
 	PyStand ps("runtime");
@@ -325,6 +325,7 @@ WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
 		return 3;
 	}
 	if (AttachConsole(ATTACH_PARENT_PROCESS)) {
+#if 0
 		freopen("CONOUT$", "w", stdout);
 		freopen("CONOUT$", "w", stderr);
 		freopen("CONIN$", "r", stdin);
@@ -338,6 +339,7 @@ WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
 			std::string fn = std::to_string(fd);
 			SetEnvironmentVariableA("PYSTAND_STDIN", fn.c_str());
 		}
+#endif
 	}
 	int hr = ps.RunString(init_script);
 	// printf("finalize\n");
