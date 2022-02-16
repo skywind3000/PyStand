@@ -175,6 +175,13 @@ bool PyStand::CheckEnviron(const wchar_t *rtp)
 bool PyStand::LoadPython()
 {
 	std::wstring runtime = _runtime;
+	std::wstring previous;
+
+	// save current directory
+	wchar_t path[MAX_PATH + 10];
+	GetCurrentDirectoryW(MAX_PATH + 1, path);
+	previous = path;
+
 	// python dll must be load under "runtime"
 	SetCurrentDirectoryW(runtime.c_str());
 	// LoadLibrary
@@ -182,8 +189,10 @@ bool PyStand::LoadPython()
 	if (_hDLL) {
 		_Py_Main = (t_Py_Main)GetProcAddress(_hDLL, "Py_Main");
 	}	
+
 	// restore director
-	SetCurrentDirectoryW(_cwd.c_str());
+	SetCurrentDirectoryW(previous.c_str());
+
 	if (_hDLL == NULL) {
 		std::wstring msg = L"Cannot load python3.dll from:\r\n" + runtime;
 		MessageBoxW(NULL, msg.c_str(), L"ERROR", MB_OK);
