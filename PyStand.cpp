@@ -95,6 +95,7 @@ bool PyStand::CheckEnviron(const wchar_t *rtp)
 	for (int i = 0; i < argc; i++) {
 		_argv[i] = argvw[i];
 	}
+	LocalFree(argvw);
 
 	// init: _cwd (current working directory)
 	wchar_t path[MAX_PATH + 10];
