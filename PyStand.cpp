@@ -158,7 +158,11 @@ bool PyStand::CheckEnviron(const wchar_t *rtp)
 	SetEnvironmentVariableW(L"PYSTAND", _pystand.c_str());
 	SetEnvironmentVariableW(L"PYSTAND_HOME", _home.c_str());
 	SetEnvironmentVariableW(L"PYSTAND_RUNTIME", _runtime.c_str());
+
+	// unnecessary to init PYSTAND_SCRIPT here.
+#if 0
 	SetEnvironmentVariableW(L"PYSTAND_SCRIPT", _script.c_str());
+#endif
 
 #if 0
 	wprintf(L"%s - %s\n", _pystand.c_str(), path);
