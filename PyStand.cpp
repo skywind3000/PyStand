@@ -321,9 +321,10 @@ const char *init_script =
 "sys.path.append(os.path.abspath(PYSTAND_HOME))\n"
 "sys.argv = [PYSTAND_SCRIPT] + sys.argv[1:]\n"
 "text = open(PYSTAND_SCRIPT, 'rb').read()\n"
+"code = compile(text, PYSTAND_SCRIPT, 'exec')\n"
 "environ = {'__file__': PYSTAND_SCRIPT, '__name__': '__main__'}\n"
 "environ['__package__'] = None\n"
-"exec(text, environ)\n"
+"exec(code, environ)\n"
 "";
 
 
