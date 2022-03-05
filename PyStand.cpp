@@ -308,6 +308,7 @@ const char *init_script =
 "    ctypes.windll.user32.MessageBoxW(None, str(msg), str(info), 0)\n"
 "    return 0\n"
 "os.MessageBox = MessageBox\n"
+#ifndef PYSTAND_CONSOLE_BASED
 "try:\n"
 "    fd = os.open('CONOUT$', os.O_RDWR | os.O_BINARY)\n"
 "    fp = os.fdopen(fd, 'w')\n"
@@ -315,6 +316,7 @@ const char *init_script =
 "    sys.stderr = fp\n"
 "except Exception as e:\n"
 "    pass\n"
+#endif
 "for n in ['lib', 'site-packages']:\n"
 "    test = os.path.join(PYSTAND_HOME, n)\n"
 "    if os.path.exists(test): sys.path.append(test)\n"
@@ -332,17 +334,22 @@ const char *init_script =
 // main
 //---------------------------------------------------------------------
 
+#ifdef PYSTAND_CONSOLE_BASED
+int main()
+#else
 //! flag: -static
 //! src: 
 //! mode: win
 //! int: objs
 int WINAPI 
 WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
+#endif
 {
 	PyStand ps("runtime");
 	if (ps.DetectScript() != 0) {
 		return 3;
 	}
+#ifndef PYSTAND_CONSOLE_BASED
 	if (AttachConsole(ATTACH_PARENT_PROCESS)) {
 		freopen("CONOUT$", "w", stdout);
 		freopen("CONOUT$", "w", stderr);
@@ -357,6 +364,7 @@ WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
 			SetEnvironmentVariableA("PYSTAND_STDIN", fn.c_str());
 		}
 	}
+#endif
 	int hr = ps.RunString(init_script);
 	// printf("finalize\n");
 	return hr;
