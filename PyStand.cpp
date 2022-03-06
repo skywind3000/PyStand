@@ -309,7 +309,7 @@ const char *init_script =
 "    ctypes.windll.user32.MessageBoxW(None, str(msg), str(info), 0)\n"
 "    return 0\n"
 "os.MessageBox = MessageBox\n"
-#ifndef PYSTAND_CONSOLE_BASED
+#ifndef PYSTAND_CONSOLE
 "try:\n"
 "    fd = os.open('CONOUT$', os.O_RDWR | os.O_BINARY)\n"
 "    fp = os.fdopen(fd, 'w')\n"
@@ -335,7 +335,7 @@ const char *init_script =
 // main
 //---------------------------------------------------------------------
 
-#ifdef PYSTAND_CONSOLE_BASED
+#ifdef PYSTAND_CONSOLE
 int main()
 #else
 //! flag: -static
@@ -350,7 +350,7 @@ WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
 	if (ps.DetectScript() != 0) {
 		return 3;
 	}
-#ifndef PYSTAND_CONSOLE_BASED
+#ifndef PYSTAND_CONSOLE
 	if (AttachConsole(ATTACH_PARENT_PROCESS)) {
 		freopen("CONOUT$", "w", stdout);
 		freopen("CONOUT$", "w", stderr);

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 project (PyStand LANGUAGES CXX RC)
 
-option(PYSTAND_CONSOLE_BASED "Build PyStand as a console based application." OFF)
+option(PYSTAND_CONSOLE "Build PyStand as a console application." OFF)
 
 # sources
 set(sources
@@ -10,9 +10,9 @@ set(sources
 	resource.rc
 	)
 
-if (PYSTAND_CONSOLE_BASED)
+if (PYSTAND_CONSOLE)
 	add_executable(PyStand ${sources})
-	target_compile_definitions(PyStand PRIVATE PYSTAND_CONSOLE_BASED)
+	target_compile_definitions(PyStand PRIVATE PYSTAND_CONSOLE)
 else()
 	add_executable(PyStand WIN32 ${sources})
 endif()
