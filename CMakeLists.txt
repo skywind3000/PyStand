@@ -1,15 +1,21 @@
 cmake_minimum_required(VERSION 3.5)
 
-project (PyStand)
+project (PyStand LANGUAGES CXX RC)
 
+option(PYSTAND_CONSOLE "Build PyStand as a console application." OFF)
 
 # sources
-add_executable(PyStand
-	WIN32
+set(sources
 	PyStand.cpp
 	resource.rc
 	)
 
+if (PYSTAND_CONSOLE)
+	add_executable(PyStand ${sources})
+	target_compile_definitions(PyStand PRIVATE PYSTAND_CONSOLE)
+else()
+	add_executable(PyStand WIN32 ${sources})
+endif()
 
 # static link
 if (CMAKE_GENERATOR MATCHES "Visual Studio")
