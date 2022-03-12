@@ -1,7 +1,6 @@
 # PyStand
 
-Python 独立部署环境。Python 3.5 以后，Windows 下面都有一个 Embedded Python 的
-独立 Python 运行环境，这个 PyStand 就是配合 Embedded Python 使用的。
+Python 独立部署环境。Python 3.5 以后，Windows 下面都有一个 Embedded Python 的独立 Python 运行环境，这个 PyStand 就是配合 Embedded Python 使用的。
 
 ## 特性介绍
 
@@ -11,30 +10,37 @@ Python 独立部署环境。Python 3.5 以后，Windows 下面都有一个 Embed
 ## 功能说明
 
 - Windows 下独立 Python 环境的启动器。
-- 自动加载 PyStand.exe 同级目录下面 runtime 子目录内的 Embedded Python。
-- 自动启动 PyStand.exe 同级目录下面的 PyStand.int 程序（Python 代码）。
+- 自动加载 `PyStand.exe` 同级目录下面 runtime 子目录内的 Embedded Python。
+- 自动启动 `PyStand.exe` 同级目录下面的 `PyStand.int` 程序（Python 代码）。
 - 如果改名，会加载对应名称的 `.int` 文件，比如改为 `MyDemo.exe` 就会加载 `MyDemo.int`。
 - 窗口程序，无 Console，但是如果在 cmd.exe 内运行，可以看到 print 的内容。
-- 会自动添加 PyStand.exe 同级目录下的 `site-packages` 目录，库可以放到里面。
+- 会自动添加 `PyStand.exe` 同级目录下的 `site-packages` 目录，库可以放到里面。
 
 ## 使用方式
 
-- 用 CMake 生成 PyStand.exe （或者到 Release 里下个现成的）。
-- 下载 Python Embedded 版本，放到 PyStand.exe 所在目录的 runtime 子目录内。
+- 用 CMake 生成 `PyStand.exe` （或者到 Release 里下个现成的）。
+- 下载 Python Embedded 版本，放到 `PyStand.exe` 所在目录的 runtime 子目录内。
 - 注意 Python Embedded 如果是 32 位，PyStand 配置 CMake 时也需要指明 `-A Win32`。
-- 在 PyStand.exe 所在目录创建 Python 源代码 PyStand.int。
-- 双击 PyStand.exe 就会运行 PyStand.int 里的代码。
+- 在 `PyStand.exe` 所在目录创建 Python 源代码 PyStand.int。
+- 双击 `PyStand.exe` 就会运行 `PyStand.int` 里的代码。
+- 可以编译成命令行版方便调试，CMake 的时候加 `-DPYSTAND_CONSOLE=ON` 即可。
 
 ## 常见问题
 
 ### 安装依赖
 
-用一个同 Embedded Python 相同版本的 Python 做一个 venv，然后 pip 独立安装好模块后
-将 site-packages 内对应的包复制到 PyStand.exe 的 site-packages 下直接使用。
+用一个同 Embedded Python 相同版本的 Python 做一个 venv，然后 `pip` 独立安装好模块后将 site-packages 内对应的包复制到 `PyStand.exe` 的 `site-packages` 下直接使用。
 
 ### 查看错误
 
-如果在 cmd.exe 内部运行 PyStand.exe 可以看到标准输出和标准错误。
+如果在 `cmd.exe` 内部运行 `PyStand.exe` 可以看到标准输出和标准错误。不过推荐的做法是 PyStand.int 里尽量精简，比如：
+
+```python
+import main
+main.main()
+```
+
+把你的主程序写到 `main.py` 里面，用你常规方式把程序调试通顺了，然后再在 `PyStand.int` 里 `import` 一下即可，实在 `PyStand.int` 有错误，再到命令行下面去运行 `PyStand.exe` 查看错误。
 
 ### MessageBox
 
@@ -47,11 +53,9 @@ PyStand 添加了一个 `os.MessageBox(msg, title)` 的接口，可以用来简�
 
 ### 脚本组织
 
-可以在 PyStand.exe 同级目录新建一个 script 文件夹，将脚本放进去，PyStand.int 里面
-就是添加一下 sys.path 然后 import 即可。
+可以在 PyStand.exe 同级目录新建一个 script 文件夹，将脚本放进去，PyStand.int 里面就是添加一下 sys.path 然后 import 即可。
 
-发布打包时将 script 文件夹用 zip 压缩成 script.egg 文件，PyStand.int 里检测到该
-文件存在就加入到 sys.path，然后再 import。
+发布打包时将 script 文件夹用 zip 压缩成 script.egg 文件，PyStand.int 里检测到该文件存在就加入到 sys.path，然后再 import。
 
 ## 使用例子
 
