@@ -339,13 +339,14 @@ const char *init_script =
 // main
 //---------------------------------------------------------------------
 
-#ifdef PYSTAND_CONSOLE
-int main()
-#else
 //! flag: -static
 //! src: 
 //! mode: win
 //! int: objs
+
+#ifdef PYSTAND_CONSOLE
+int main()
+#else
 int WINAPI 
 WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
 #endif
