@@ -36,6 +36,10 @@
 
 /.root
 
+__pycache__/*
+*.pyc
+*.pyo
+
 /runtime/*
 /source/runtime/*
 
