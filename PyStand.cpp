@@ -3,7 +3,7 @@
 // PyStand.cpp - 
 //
 // Created by skywind on 2022/02/03
-// Last Modified: 2022/03/02 21:44
+// Last Modified: 2022/03/13 00:26
 //
 //=====================================================================
 #ifdef _MSC_VER
@@ -299,11 +299,15 @@ const char *init_script =
 "import sys\n"
 "import os\n"
 "import copy\n"
+"import site\n"
 "PYSTAND = os.environ['PYSTAND']\n"
 "PYSTAND_HOME = os.environ['PYSTAND_HOME']\n"
 "PYSTAND_RUNTIME = os.environ['PYSTAND_RUNTIME']\n"
 "PYSTAND_SCRIPT = os.environ['PYSTAND_SCRIPT']\n"
 "sys.path_origin = [n for n in sys.path]\n"
+"sys.PYSTAND = PYSTAND\n"
+"sys.PYSTAND_HOME = PYSTAND_HOME\n"
+"sys.PYSTAND_SCRIPT = PYSTAND_SCRIPT\n"
 "def MessageBox(msg, info = 'Message'):\n"
 "    import ctypes\n"
 "    ctypes.windll.user32.MessageBoxW(None, str(msg), str(info), 0)\n"
@@ -318,10 +322,10 @@ const char *init_script =
 "except Exception as e:\n"
 "    pass\n"
 #endif
-"for n in ['lib', 'site-packages']:\n"
-"    test = os.path.join(PYSTAND_HOME, n)\n"
-"    if os.path.exists(test): sys.path.append(test)\n"
-"sys.path.append(os.path.abspath(PYSTAND_HOME))\n"
+"for n in ['.', 'lib', 'site-packages']:\n"
+"    test = os.path.abspath(os.path.join(PYSTAND_HOME, n))\n"
+"    if os.path.exists(test):\n"
+"       site.addsitedir(test)\n"
 "sys.argv = [PYSTAND_SCRIPT] + sys.argv[1:]\n"
 "text = open(PYSTAND_SCRIPT, 'rb').read()\n"
 "code = compile(text, PYSTAND_SCRIPT, 'exec')\n"
