@@ -341,6 +341,8 @@ const char *init_script =
 
 //! flag: -static
 //! src: 
+//! link: stdc++, shlwapi, resource.o
+//! prebuild: windres resource.rc -o resource.o
 //! mode: win
 //! int: objs
 
