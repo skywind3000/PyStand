@@ -261,9 +261,10 @@ int PyStand::DetectScript()
 {
 	// init: _script (init script like PyStand.int or PyStand.py)
 	int size = (int)_pystand.size() - 1;
-	for (; size > 0; size--) {
+	for (; size >= 0; size--) {
 		if (_pystand[size] == L'.') break;
 	}
+	if (size < 0) size = (int)_pystand.size();
 	std::wstring main = _pystand.substr(0, size);
 	std::vector<const wchar_t*> exts;
 	std::vector<std::wstring> scripts;
