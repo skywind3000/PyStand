@@ -68,12 +68,12 @@ PyStand::PyStand(const char *runtime)
 //---------------------------------------------------------------------
 std::wstring PyStand::Ansi2Unicode(const char *text)
 {
-	int require = (int)strlen(text) * 2 + 10;
 	std::wstring wide;
-	wide.resize(require + 2);
-	MultiByteToWideChar(CP_ACP, 0, text, -1, &wide[0], require);
-	int size = wcslen(wide.c_str());
-	wide.resize(size);
+	int require = MultiByteToWideChar(CP_ACP, 0, text, -1, NULL, 0);
+	if (require > 0) {
+		wide.resize(require);
+		MultiByteToWideChar(CP_ACP, 0, text, -1, &wide[0], require);
+	}
 	return wide;
 }
 
