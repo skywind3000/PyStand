@@ -13,6 +13,7 @@
 #include "PyStand.h"
 #include <shlwapi.h>
 #include <string>
+#include <string.h>
 #include <winbase.h>
 #include <wincon.h>
 
@@ -68,11 +69,12 @@ PyStand::PyStand(const char *runtime)
 //---------------------------------------------------------------------
 std::wstring PyStand::Ansi2Unicode(const char *text)
 {
+	int len = (int)strlen(text);
 	std::wstring wide;
-	int require = MultiByteToWideChar(CP_ACP, 0, text, -1, NULL, 0);
+	int require = MultiByteToWideChar(CP_ACP, 0, text, len, NULL, 0);
 	if (require > 0) {
 		wide.resize(require);
-		MultiByteToWideChar(CP_ACP, 0, text, -1, &wide[0], require);
+		MultiByteToWideChar(CP_ACP, 0, text, len, &wide[0], require);
 	}
 	return wide;
 }
