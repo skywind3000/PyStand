@@ -260,22 +260,9 @@ int PyStand::RunString(const char *script)
 int PyStand::DetectScript()
 {
 	// init: _script (init script like PyStand.int or PyStand.py)
-#if 0
-	int size = (int)_pystand.size() - 1;
-	for (; size >= 0; size--) {
-		if (_pystand[size] == L'.') break;
-		else if (_pystand[size] == L'\\' || _pystand[size] == L'/') {
-			size = -1;
-			break;
-		}
-	}
-	if (size < 0) size = (int)_pystand.size();
-	std::wstring main = _pystand.substr(0, size);
-#else
 	const wchar_t *start = _pystand.c_str();
 	const wchar_t *ext = PathFindExtensionW(start);
 	std::wstring main = _pystand.substr(0, ext - start);
-#endif
 	std::vector<const wchar_t*> exts;
 	std::vector<std::wstring> scripts;
 	exts.push_back(L".int");
