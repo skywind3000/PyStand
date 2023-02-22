@@ -323,7 +323,9 @@ const char *init_script =
 "    sys.stdout = fp\n"
 "    sys.stderr = fp\n"
 "except Exception as e:\n"
-"    pass\n"
+"    fp = open(os.devnull, 'w')\n"
+"    sys.stdout = fp\n"
+"    sys.stderr = fp\n"
 #endif
 "for n in ['.', 'lib', 'site-packages']:\n"
 "    test = os.path.abspath(os.path.join(PYSTAND_HOME, n))\n"
