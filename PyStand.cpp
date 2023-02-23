@@ -330,7 +330,7 @@ const char *init_script =
 "for n in ['.', 'lib', 'site-packages']:\n"
 "    test = os.path.abspath(os.path.join(PYSTAND_HOME, n))\n"
 "    if os.path.exists(test):\n"
-"       site.addsitedir(test)\n"
+"        site.addsitedir(test)\n"
 "sys.argv = [PYSTAND_SCRIPT] + sys.argv[1:]\n"
 "text = open(PYSTAND_SCRIPT, 'rb').read()\n"
 "code = compile(text, PYSTAND_SCRIPT, 'exec')\n"
