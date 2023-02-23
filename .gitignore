@@ -60,4 +60,6 @@ __pycache__/*
 /.tasks
 /site-packages/*
 /publish/*
+/test/ztest_*.cpp
+/ztest_*.cpp
 
