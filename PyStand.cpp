@@ -336,7 +336,17 @@ const char *init_script =
 "code = compile(text, PYSTAND_SCRIPT, 'exec')\n"
 "environ = {'__file__': PYSTAND_SCRIPT, '__name__': '__main__'}\n"
 "environ['__package__'] = None\n"
+#ifndef PYSTAND_CONSOLE
+"try:\n"
+"    exec(code, environ)\n"
+"except:\n"
+"    import traceback, io\n"
+"    sio = io.StringIO()\n"
+"    traceback.print_exc(file = sio)\n"
+"    os.MessageBox(sio.getvalue(), 'Error')\n"
+#else
 "exec(code, environ)\n"
+#endif
 "";
 
 
