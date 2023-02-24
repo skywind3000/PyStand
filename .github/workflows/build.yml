@@ -1,15 +1,16 @@
 name: PyStand
 
-on: [ push, pull_request ]
+on:
+  push:
+  pull_request:
+    types: [ opened, synchronize, reopened, ready_for_review ]
 
 env:
-  PYSTAND_VERSION: v1.0.6
   BUILD_TYPE: Release
 
 jobs:
   build-msvc:
     if: >-
-      ! contains(toJSON(github.event.commits.*.message), '[skip ci]') &&
       github.event.pull_request.draft == false
 
     runs-on: windows-latest
@@ -17,11 +18,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        arch: [ Win32, x64 ]
+        subsystem: [ GUI, CLI ]
         include:
-          - { generator: Visual Studio 17 2022, arch: Win32, subsystem: GUI }
-          - { generator: Visual Studio 17 2022, arch: Win32, subsystem: CLI }
-          - { generator: Visual Studio 17 2022, arch: x64, subsystem: GUI }
-          - { generator: Visual Studio 17 2022, arch: x64, subsystem: CLI }
+          - generator: Visual Studio 17 2022
 
     steps:
     - name: Checkout
@@ -42,12 +42,11 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: PyStand-${{ env.PYSTAND_VERSION }}-${{ matrix.arch }}-${{ matrix.subsystem }}
+        name: PyStand-${{ matrix.arch }}-${{ matrix.subsystem }}
         path: build/${{ env.BUILD_TYPE }}
 
   build-gcc:
     if: >-
-      ! contains(toJSON(github.event.commits.*.message), '[skip ci]') &&
       github.event.pull_request.draft == false
 
     runs-on: windows-latest
@@ -55,19 +54,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - { sys: mingw32, arch: i686, subsystem: GUI }
-          - { sys: mingw32, arch: i686, subsystem: CLI }
-          - { sys: mingw64, arch: x86_64, subsystem: GUI }
-          - { sys: mingw64, arch: x86_64, subsystem: CLI }
+        sys: [ mingw32, mingw64 ]
+        subsystem: [ GUI, CLI ]
 
     steps:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Setup MinGW-w64
+    - name: Setup WinLibs
       run: |
-        if ( '${{ matrix.arch }}' -eq 'i686' )
+        if ( '${{ matrix.sys }}' -eq 'mingw32' )
         {
           Invoke-WebRequest -Uri https://github.com/brechtsanders/winlibs_mingw/releases/download/7.5.0-7.0.0-r1/winlibs-i686-posix-dwarf-gcc-7.5.0-mingw-w64-7.0.0-r1.7z -OutFile ${{ matrix.sys }}.7z
         }
@@ -93,13 +89,15 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: PyStand-${{ env.PYSTAND_VERSION }}-${{ matrix.sys }}-${{ matrix.subsystem }}
+        name: PyStand-${{ matrix.sys }}-${{ matrix.subsystem }}
         path: build\PyStand.exe
 
   release:
-    needs: [ build-msvc, build-gcc ]
+    if: startsWith(github.ref, 'refs/tags/')
 
     runs-on: windows-latest
+
+    needs: [ build-msvc, build-gcc ]
 
     steps:
     - name: Download artifacts
@@ -109,19 +107,21 @@ jobs:
       run: ls -R
 
     - name: Create archives
-      run: |
-        7z a PyStand-${{ env.PYSTAND_VERSION }}-Win32-CLI.zip .\PyStand-${{ env.PYSTAND_VERSION }}-Win32-CLI\*
-        7z a PyStand-${{ env.PYSTAND_VERSION }}-Win32-GUI.zip .\PyStand-${{ env.PYSTAND_VERSION }}-Win32-GUI\*
-        7z a PyStand-${{ env.PYSTAND_VERSION }}-x64-CLI.zip .\PyStand-${{ env.PYSTAND_VERSION }}-x64-CLI\*
-        7z a PyStand-${{ env.PYSTAND_VERSION }}-x64-GUI.zip .\PyStand-${{ env.PYSTAND_VERSION }}-x64-GUI\*
-        7z a PyStand-${{ env.PYSTAND_VERSION }}-mingw32-CLI.zip .\PyStand-${{ env.PYSTAND_VERSION }}-mingw32-CLI\*
-        7z a PyStand-${{ env.PYSTAND_VERSION }}-mingw32-GUI.zip .\PyStand-${{ env.PYSTAND_VERSION }}-mingw32-GUI\*
-        7z a PyStand-${{ env.PYSTAND_VERSION }}-mingw64-CLI.zip .\PyStand-${{ env.PYSTAND_VERSION }}-mingw64-CLI\*
-        7z a PyStand-${{ env.PYSTAND_VERSION }}-mingw64-GUI.zip .\PyStand-${{ env.PYSTAND_VERSION }}-mingw64-GUI\*
+      run: >
+        7z
+        a
+        PyStand-v${{ github.ref_name }}-exe.zip
+        PyStand-Win32-CLI
+        PyStand-Win32-GUI
+        PyStand-x64-CLI
+        PyStand-x64-GUI
+        PyStand-mingw32-CLI
+        PyStand-mingw32-GUI
+        PyStand-mingw64-CLI
+        PyStand-mingw64-GUI
 
     - name: Release
       uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
