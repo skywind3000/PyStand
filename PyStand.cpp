@@ -333,11 +333,11 @@ const char *init_script =
 "        site.addsitedir(test)\n"
 "sys.argv = [PYSTAND_SCRIPT] + sys.argv[1:]\n"
 "text = open(PYSTAND_SCRIPT, 'rb').read()\n"
-"code = compile(text, PYSTAND_SCRIPT, 'exec')\n"
 "environ = {'__file__': PYSTAND_SCRIPT, '__name__': '__main__'}\n"
 "environ['__package__'] = None\n"
 #ifndef PYSTAND_CONSOLE
 "try:\n"
+"    code = compile(text, PYSTAND_SCRIPT, 'exec')\n"
 "    exec(code, environ)\n"
 "except:\n"
 "    import traceback, io\n"
@@ -345,6 +345,7 @@ const char *init_script =
 "    traceback.print_exc(file = sio)\n"
 "    os.MessageBox(sio.getvalue(), 'Error')\n"
 #else
+"code = compile(text, PYSTAND_SCRIPT, 'exec')\n"
 "exec(code, environ)\n"
 #endif
 "";
