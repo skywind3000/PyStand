@@ -3,19 +3,20 @@
 // PyStand.cpp - 
 //
 // Created by skywind on 2022/02/03
-// Last Modified: 2022/03/13 00:26
+// Last Modified: 2023/03/17 20:06
 //
 //=====================================================================
 #ifdef _MSC_VER
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
-#include "PyStand.h"
 #include <shlwapi.h>
 #include <string>
 #include <string.h>
 #include <winbase.h>
 #include <wincon.h>
+
+#include "PyStand.h"
 
 #ifdef _MSC_VER
 #pragma comment(lib, "shlwapi.lib")
@@ -256,6 +257,15 @@ int PyStand::RunString(const char *script)
 }
 
 
+
+//---------------------------------------------------------------------
+// static init script
+//---------------------------------------------------------------------
+#ifndef PYSTAND_STATIC_NAME
+#define PYSTAND_STATIC_NAME "_pystand_static.int"
+#endif
+
+
 //---------------------------------------------------------------------
 // LoadScript()
 //---------------------------------------------------------------------
@@ -270,25 +280,34 @@ int PyStand::DetectScript()
 	std::wstring main = _pystand.substr(0, size);
 	std::vector<const wchar_t*> exts;
 	std::vector<std::wstring> scripts;
-	exts.push_back(L".int");
-	exts.push_back(L".py");
-	exts.push_back(L".pyw");
-	_script = L"";
-	for (int i = 0; i < (int)exts.size(); i++) {
-		std::wstring test = main + exts[i];
-		scripts.push_back(test);
-		if (PathFileExistsW(test.c_str())) {
-			_script = test;
-			break;
-		}
+	_script.clear();
+#if !(PYSTAND_DISABLE_STATIC)
+	std::wstring test;
+	test = _home + L"\\" + Ansi2Unicode(PYSTAND_STATIC_NAME);
+	if (PathFileExistsW(test.c_str())) {
+		_script = test;
 	}
-	if (_script.size() == 0) {
-		std::wstring msg = L"Can't find either of:\r\n";
-		for (int j = 0; j < (int)scripts.size(); j++) {
-			msg += scripts[j] + L"\r\n";
+#endif
+	if (_script.empty()) {
+		exts.push_back(L".int");
+		exts.push_back(L".py");
+		exts.push_back(L".pyw");
+		for (int i = 0; i < (int)exts.size(); i++) {
+			std::wstring test = main + exts[i];
+			scripts.push_back(test);
+			if (PathFileExistsW(test.c_str())) {
+				_script = test;
+				break;
+			}
 		}
-		MessageBoxW(NULL, msg.c_str(), L"ERROR", MB_OK);
-		return -1;
+		if (_script.size() == 0) {
+			std::wstring msg = L"Can't find either of:\r\n";
+			for (int j = 0; j < (int)scripts.size(); j++) {
+				msg += scripts[j] + L"\r\n";
+			}
+			MessageBoxW(NULL, msg.c_str(), L"ERROR", MB_OK);
+			return -1;
+		}
 	}
 	SetEnvironmentVariableW(L"PYSTAND_SCRIPT", _script.c_str());
 	return 0;
