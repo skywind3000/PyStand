@@ -358,7 +358,7 @@ const char *init_script =
 "try:\n"
 "    code = compile(text, PYSTAND_SCRIPT, 'exec')\n"
 "    exec(code, environ)\n"
-"except:\n"
+"except Exception:\n"
 "    import traceback, io\n"
 "    sio = io.StringIO()\n"
 "    traceback.print_exc(file = sio)\n"
