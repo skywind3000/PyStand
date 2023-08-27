@@ -301,12 +301,21 @@ int PyStand::DetectScript()
 			}
 		}
 		if (_script.size() == 0) {
-			std::wstring msg = L"Can't find either of:\r\n";
-			for (int j = 0; j < (int)scripts.size(); j++) {
-				msg += scripts[j] + L"\r\n";
+			// No default script found, try import the app and run it.
+			std::wstring app;
+			app = _home + L"\\app";
+			if (PathFileExistsW(app.c_str())) {
+				_script = app;
+			}else{
+				std::wstring msg = L"Can't find either of:\r\n";
+				for (int j = 0; j < (int)scripts.size(); j++) {
+					msg += scripts[j] + L"\r\n";
+				}
+				msg += app + L"\r\n";
+				MessageBoxW(NULL, msg.c_str(), L"ERROR", MB_OK);
+				return -1;
 			}
-			MessageBoxW(NULL, msg.c_str(), L"ERROR", MB_OK);
-			return -1;
+
 		}
 	}
 	SetEnvironmentVariableW(L"PYSTAND_SCRIPT", _script.c_str());
@@ -353,13 +362,20 @@ const char *init_script =
 "    if os.path.exists(test):\n"
 "        site.addsitedir(test)\n"
 "sys.argv = [PYSTAND_SCRIPT] + sys.argv[1:]\n"
-"text = open(PYSTAND_SCRIPT, 'rb').read()\n"
+"if os.path.isfile(PYSTAND_SCRIPT):\n"
+"    text = open(PYSTAND_SCRIPT, 'rb').read()\n"
+"else:\n"
+"    text = ''\n"
 "environ = {'__file__': PYSTAND_SCRIPT, '__name__': '__main__'}\n"
 "environ['__package__'] = None\n"
 #ifndef PYSTAND_CONSOLE
 "try:\n"
-"    code = compile(text, PYSTAND_SCRIPT, 'exec')\n"
-"    exec(code, environ)\n"
+"    if len(text) == 0:\n"
+"        from app import run\n"
+"        run()\n"
+"    else:\n"
+"        code = compile(text, PYSTAND_SCRIPT, 'exec')\n"
+"        exec(code, environ)\n"
 "except Exception:\n"
 "    if attached:\n"
 "        raise\n"
@@ -368,8 +384,15 @@ const char *init_script =
 "    traceback.print_exc(file = sio)\n"
 "    os.MessageBox(sio.getvalue(), 'Error')\n"
 #else
-"code = compile(text, PYSTAND_SCRIPT, 'exec')\n"
-"exec(code, environ)\n"
+"try:\n"
+"    if len(text) == 0:\n"
+"        from app import run\n"
+"        run()\n"
+"    else:\n"
+"        code = compile(text, PYSTAND_SCRIPT, 'exec')\n"
+"        exec(code, environ)\n"
+"except Exception as e:\n"
+"    os.MessageBox(str(e), 'Error')\n"
 #endif
 "";
 
