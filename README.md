@@ -13,6 +13,7 @@ Python 独立部署环境。Python 3.5 以后，Windows 下面都有一个 Embed
 - 自动加载 `PyStand.exe` 同级目录下面 `runtime` 子目录内的 Embedded Python。
 - 自动启动 `PyStand.exe` 同级目录下面的 `PyStand.int` 程序（Python 代码）。
 - 如果改名，会加载对应名称的 `.int` 文件，比如改为 `MyDemo.exe` 就会加载 `MyDemo.int`。
+- 如果根目录没有int/py/pyw脚本且存在app目录,会自动导入`app`模块且执行`run`函数
 - 窗口程序，无 Console，但是如果在 cmd.exe 内运行，可以看到 print 的内容。
 - 会自动添加 `PyStand.exe` 同级目录下的 `site-packages` 目录，库可以放到里面。
 
