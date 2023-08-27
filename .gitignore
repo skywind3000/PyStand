@@ -55,6 +55,7 @@ __pycache__/*
 /Release/*
 /x64/*
 /.vs/*
+/.vscode/*
 /build/*
 
 /.tasks
