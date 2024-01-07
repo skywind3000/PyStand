@@ -13,6 +13,7 @@ Python 独立部署环境。Python 3.5 以后，Windows 下面都有一个 Embed
 - 自动加载 `PyStand.exe` 同级目录下面 `runtime` 子目录内的 Embedded Python。
 - 自动启动 `PyStand.exe` 同级目录下面的 `PyStand.int` 程序（Python 代码）。
 - 如果改名，会加载对应名称的 `.int` 文件，比如改为 `MyDemo.exe` 就会加载 `MyDemo.int`。
+- 如果根目录没有int/py/pyw脚本且存在app目录,会自动导入`app`模块且执行`run`函数
 - 窗口程序，无 Console，但是如果在 cmd.exe 内运行，可以看到 print 的内容。
 - 会自动添加 `PyStand.exe` 同级目录下的 `site-packages` 目录，库可以放到里面。
 
@@ -22,6 +23,7 @@ Python 独立部署环境。Python 3.5 以后，Windows 下面都有一个 Embed
 - 下载 Python Embedded 版本，放到 `PyStand.exe` 所在目录的 runtime 子目录内。
 - 注意 Python Embedded 如果是 32 位，PyStand 配置 CMake 时也需要指明 `-A Win32`。
 - 在 `PyStand.exe` 所在目录创建 Python 源代码 PyStand.int。
+- 如果你不希望脚本存在根目录,那么必须存在一个叫`app`的包,且包内必须存在`run()`函数用来启动程式
 - 双击 `PyStand.exe` 就会运行 `PyStand.int` 里的代码。
 - 可以编译成命令行版方便调试，CMake 的时候加 `-DPYSTAND_CONSOLE=ON` 即可。
 
