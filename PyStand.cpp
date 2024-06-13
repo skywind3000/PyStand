@@ -1,6 +1,6 @@
 //=====================================================================
 //
-// PyStand.cpp - 
+// PyStand.cpp -
 //
 // Created by skywind on 2022/02/03
 // Last Modified: 2023/03/17 20:06
@@ -82,7 +82,7 @@ std::wstring PyStand::Ansi2Unicode(const char *text)
 
 
 //---------------------------------------------------------------------
-// init: _args, _argv, _cwd, _pystand, _home, _runtime, 
+// init: _args, _argv, _cwd, _pystand, _home, _runtime,
 //---------------------------------------------------------------------
 bool PyStand::CheckEnviron(const wchar_t *rtp)
 {
@@ -192,11 +192,12 @@ bool PyStand::LoadPython()
 
 	// python dll must be load under "runtime"
 	SetCurrentDirectoryW(runtime.c_str());
+    SetDllDirectoryW(runtime.c_str());
 	// LoadLibrary
 	_hDLL = (HINSTANCE)LoadLibraryA("python3.dll");
 	if (_hDLL) {
 		_Py_Main = (t_Py_Main)GetProcAddress(_hDLL, "Py_Main");
-	}	
+	}
 
 	// restore director
 	SetCurrentDirectoryW(previous.c_str());
@@ -317,7 +318,7 @@ int PyStand::DetectScript()
 //---------------------------------------------------------------------
 // init script
 //---------------------------------------------------------------------
-const char *init_script = 
+const char *init_script =
 "import sys\n"
 "import os\n"
 "import copy\n"
@@ -379,7 +380,7 @@ const char *init_script =
 //---------------------------------------------------------------------
 
 //! flag: -static
-//! src: 
+//! src:
 //! link: stdc++, shlwapi, resource.o
 //! prebuild: windres resource.rc -o resource.o
 //! mode: win
@@ -388,7 +389,7 @@ const char *init_script =
 #ifdef PYSTAND_CONSOLE
 int main()
 #else
-int WINAPI 
+int WINAPI
 WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int show)
 #endif
 {
