@@ -345,7 +345,7 @@ const char *init_script =
 "    sys.stderr = fp\n"
 "    attached = True\n"
 "except Exception as e:\n"
-"    fp = open(os.devnull, 'w')\n"
+"    fp = open(os.devnull, 'w', errors='ignore')\n"
 "    sys.stdout = fp\n"
 "    sys.stderr = fp\n"
 "    attached = False\n"
