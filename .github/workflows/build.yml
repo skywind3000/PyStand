@@ -25,7 +25,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Configure
       run: >
@@ -40,7 +40,7 @@ jobs:
         cmake --build build --config ${{ env.BUILD_TYPE }}
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: PyStand-${{ matrix.arch }}-${{ matrix.subsystem }}
         path: build/${{ env.BUILD_TYPE }}
@@ -59,7 +59,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup WinLibs
       run: |
@@ -87,7 +87,7 @@ jobs:
         cmake --build build --config ${{ env.BUILD_TYPE }}
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: PyStand-${{ matrix.sys }}-${{ matrix.subsystem }}
         path: build\PyStand.exe
@@ -101,7 +101,7 @@ jobs:
 
     steps:
     - name: Download artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
 
     - name: List downloaded files
       run: ls -R
@@ -121,7 +121,7 @@ jobs:
         PyStand-mingw64-GUI
 
     - name: Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
