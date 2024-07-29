@@ -350,7 +350,7 @@ const char *init_script =
 "    sys.stderr = fp\n"
 "    attached = False\n"
 #endif
-"for n in ['.', 'lib', 'site-packages']:\n"
+"for n in ['.', 'lib', 'site-packages', 'runtime']:\n"
 "    test = os.path.abspath(os.path.join(PYSTAND_HOME, n))\n"
 "    if os.path.exists(test):\n"
 "        site.addsitedir(test)\n"
