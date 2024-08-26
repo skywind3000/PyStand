@@ -48,14 +48,20 @@ PyStand 添加了一个 `os.MessageBox(msg, title)` 的接口，可以用来简�
 
 ### 更换图标
 
-可以替换 appicon.ico 文件并重新编译 PyStand.exe ，或者使用 Resource Hacker 直接
-替换 Release 内下载的 PyStand.exe 文件的程序图标。
+可以替换 `appicon.ico` 文件并重新编译 `PyStand.exe` ，或者使用 `Resource Hacker` 直接
+替换 `Release` 内下载的 `PyStand.exe` 文件的程序图标。
 
 ### 脚本组织
 
-可以在 PyStand.exe 同级目录新建一个 script 文件夹，将脚本放进去，PyStand.int 里面就是添加一下 sys.path 然后 import 即可。
+可以在 `PyStand.exe` 同级目录新建一个 `script` 文件夹，将脚本放进去，`PyStand.int` 里面就是添加一下 `sys.path` 然后 `import` 即可。
 
-发布打包时将 script 文件夹用 zip 压缩成 script.egg 文件，PyStand.int 里检测到该文件存在就加入到 sys.path，然后再 import。
+发布打包时将 `script` 文件夹用 `zip` 压缩成 `script.egg` 文件，`PyStand.int` 里检测到该文件存在就加入到 `sys.path`，然后再 `import`。
+
+### 静态入口
+
+部分网友有个需求，担心用户把可执行文件改名，但 `.int` 文件没改名导致出错的问题，因此增加了一个名为 `_pystand_static.int` 的入口文件，在 `PyStand` 主程序启动时，如果检测到在主程序同目录下存在该文件，则会优先加载，不存在才回去找 `PyStand.int` 文件。
+
+这样主程序就允许随意改名了，只要把入口写在 `_pystand_static.int` 中即可。
 
 ## 使用例子
 
