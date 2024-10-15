@@ -63,3 +63,4 @@ __pycache__/*
 /test/ztest_*.cpp
 /ztest_*.cpp
 
+/.vscode/*

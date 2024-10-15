@@ -67,7 +67,7 @@ PyStand 添加了一个 `os.MessageBox(msg, title)` 的接口，可以用来简�
 
 这个回答里我说了详细的用法以及 PyInstaller 的优缺点：
 
-- [知乎：打包 PyQt 应用的最佳方案是什么？](https://www.zhihu.com/question/48776632/answer/2336654649).
+- [Skywind Inside：打包 PyQt 应用的最佳方案是什么？](https://skywind.me/blog/archives/3002)
 
 更多的用法可以见 Release 下面的例子。
 
