@@ -345,11 +345,11 @@ const char *init_script =
 "    sys.stderr = fp\n"
 "    attached = True\n"
 "except Exception as e:\n"
+"    attached = False\n"
 "    try:\n"
 "        fp = open(os.devnull, 'w', errors='ignore')\n"
 "        sys.stdout = fp\n"
 "        sys.stderr = fp\n"
-"        attached = False\n"
 "    except:\n"
 "        pass\n"
 #endif
