@@ -194,8 +194,9 @@ bool PyStand::LoadPython()
 	SetCurrentDirectoryW(runtime.c_str());
 	SetDllDirectoryW(runtime.c_str());
 
+	auto pydll = runtime + L"\\python3.dll";
 	// LoadLibrary
-	_hDLL = (HINSTANCE)LoadLibraryA("python3.dll");
+	_hDLL = (HINSTANCE)LoadLibraryW(pydll.c_str());
 	if (_hDLL) {
 		_Py_Main = (t_Py_Main)GetProcAddress(_hDLL, "Py_Main");
 	}
@@ -210,7 +211,7 @@ bool PyStand::LoadPython()
 	}
 	else if (_Py_Main == NULL) {
 		std::wstring msg = L"Cannot find Py_Main() in:\r\n";
-		msg += runtime + L"\\python3.dll";
+		msg += pydll;
 		MessageBoxW(NULL, msg.c_str(), L"ERROR", MB_OK);
 		return false;
 	}
