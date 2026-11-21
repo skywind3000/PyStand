@@ -48,7 +48,7 @@ PyStand 添加了一个 `os.MessageBox(msg, title)` 的接口，可以用来简�
 
 ### 更换图标
 
-可以替换 `appicon.ico` 文件并重新编译 `PyStand.exe` ，或者使用 `Resource Hacker` 直接
+可以替换 `appicon.ico` 文件并重新编译 `PyStand.exe` ，或者使用 `Resource Hacker or [Resource Cracker](https://www.pelock.com/products/resource-cracker)` 直接
 替换 `Release` 内下载的 `PyStand.exe` 文件的程序图标。
 
 ### 脚本组织
